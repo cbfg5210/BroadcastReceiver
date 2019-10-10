@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.bcstreceiver.BatteryCallbackBuilder
 import com.bcstreceiver.BcstReceiver
 import com.bcstreceiver.TimeCallbackBuilder
 import kotlinx.android.synthetic.main.activity_main.*
@@ -41,6 +42,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         .bind(this, lifecycle)
             }
             R.id.btnBattery -> {
+                val callback = BatteryCallbackBuilder()
+                        .act(object : BatteryCallbackBuilder.Callback {
+                            override fun onChargeChanged(isCharging: Boolean) {
+                                tvIsCharging.text = "isCharging = $isCharging"
+                            }
+
+                            override fun onAmountChanged(curAmount: Int) {
+                                tvBatteryAmount.text = "amount = $curAmount"
+                            }
+                        })
+                        .create()
+
+                BcstReceiver()
+                        .withFilter { intentFilter ->
+                            intentFilter.addAction(Intent.ACTION_POWER_CONNECTED)
+                            intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
+                            intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
+                        }
+                        //.setCallback { _, _ -> Log.e("***", "${System.currentTimeMillis()}") }
+                        .setCallback(callback)
+                        .triggerWhenRegister(true)
+                        .bind(this, lifecycle)
             }
             R.id.btnWifi -> {
             }
