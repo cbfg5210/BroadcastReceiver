@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bcstreceiver.BcstReceiver
+import com.bcstreceiver.TimeCallbackBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnWifi.setOnClickListener(this)
         btnHome.setOnClickListener(this)
         btnScreen.setOnClickListener(this)
+        btnNet.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -31,7 +33,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
                             intentFilter.addAction(Intent.ACTION_TIME_TICK)
                         }
-                        .setCallback { _, _ -> Log.e("***", "${System.currentTimeMillis()}") }
+                        //.setCallback { _, _ -> Log.e("***", "${System.currentTimeMillis()}") }
+                        .setCallback(TimeCallbackBuilder("yyyy-MM-dd HH:mm:ss")
+                                .act { timeMills, formattedTime -> Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime") }
+                                .create())
+                        .triggerWhenRegister(true)
                         .bind(this, lifecycle)
             }
             R.id.btnBattery -> {
@@ -41,6 +47,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnHome -> {
             }
             R.id.btnScreen -> {
+            }
+            R.id.btnNet -> {
             }
         }
     }
