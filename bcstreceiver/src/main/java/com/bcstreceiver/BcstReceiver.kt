@@ -1,4 +1,4 @@
-package com.bcst.receiver
+package com.bcstreceiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
