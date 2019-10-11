@@ -93,7 +93,7 @@ class BcstReceiver : BroadcastReceiver() {
             context.registerReceiver(this, intentFilter)
             hasRegisterReceiver = true
 
-            callbackProvider?.triggerAtOnce()
+            callbackProvider?.triggerAtOnce(context)
         }
     }
 

@@ -21,5 +21,5 @@ interface CallbackProvider {
     /**
      * 注册广播接收器时调用
      */
-    fun triggerAtOnce()
+    fun triggerAtOnce(context: Context)
 }

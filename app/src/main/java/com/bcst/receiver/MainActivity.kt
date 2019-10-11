@@ -38,22 +38,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
                             intentFilter.addAction(Intent.ACTION_TIME_TICK)
                         }
-                        //.setCallback { _, _ -> Log.e("***", "${System.currentTimeMillis()}") }
+                        //.setCallback { context, intent -> Log.e("***", "${System.currentTimeMillis()}") }
                         .setCallbackProvider(callbackProvider)
                         .bind(this, lifecycle)
             }
 
             R.id.btnBattery -> {
                 val callbackProvider = BatteryCallbackProvider()
-                        .act(object : BatteryCallbackProvider.Callback {
-                            override fun onChargeChanged(isCharging: Boolean) {
-                                Log.e("***", "isCharging = $isCharging")
-                            }
-
-                            override fun onAmountChanged(curAmount: Int) {
-                                Log.e("***", "battery amount = $curAmount")
-                            }
-                        })
+                        .onChargeEvent { isCharging -> Log.e("***", "isCharging = $isCharging") }
+                        .onAmountEvent { amount -> Log.e("***", "battery amount = $amount") }
+                        .onOtherEvent { action -> Log.e("***", "action = $action") }
 
                 BcstReceiver()
                         .withFilter { intentFilter ->
@@ -61,7 +55,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
                             intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
                         }
-                        //.setCallback { _, intent -> Log.e("***", "action = ${intent.action}") }
+                        //.setCallback { context, intent -> Log.e("***", "action = ${intent.action}") }
                         .setCallbackProvider(callbackProvider)
                         .bind(this, lifecycle)
             }

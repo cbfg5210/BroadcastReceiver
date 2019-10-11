@@ -2,6 +2,7 @@ package com.bcstreceiver.battery
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.BatteryManager
 import com.bcstreceiver.CallbackProvider
 
@@ -15,50 +16,59 @@ import com.bcstreceiver.CallbackProvider
  * 修改内容：
  */
 class BatteryCallbackProvider : CallbackProvider {
-    private lateinit var action: Callback
+    private var chargeAction: ((isCharging: Boolean) -> Unit)? = null
+    private var amountAction: ((amount: Int) -> Unit)? = null
+    private var otherAction: ((action: String) -> Unit)? = null
 
-    fun act(callback: Callback): BatteryCallbackProvider {
-        this.action = callback
+    private var lastLevel = -2
+    private var lastScale = -2
+
+    fun onChargeEvent(event: (isCharging: Boolean) -> Unit): BatteryCallbackProvider {
+        this.chargeAction = event
         return this
     }
 
-    override fun create(): (context: Context, intent: Intent) -> Unit {
-        return { _, intent: Intent ->
-            intent.action?.run {
-                when (this) {
-                    Intent.ACTION_POWER_CONNECTED -> action.onChargeChanged(true)
-                    Intent.ACTION_POWER_DISCONNECTED -> action.onChargeChanged(false)
-                    Intent.ACTION_BATTERY_CHANGED -> {
-                        val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                        val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-                        val curAmount = (level.toFloat() / scale * 100).toInt()
-                        action.onAmountChanged(curAmount)
+    fun onAmountEvent(event: (amount: Int) -> Unit): BatteryCallbackProvider {
+        this.amountAction = event
+        return this
+    }
+
+    fun onOtherEvent(event: (action: String) -> Unit): BatteryCallbackProvider {
+        this.otherAction = event
+        return this
+    }
+
+    override fun create(): (context: Context, intent: Intent) -> Unit = { _: Context, intent: Intent ->
+        intent.action?.run {
+            when (this) {
+                Intent.ACTION_POWER_CONNECTED -> chargeAction?.invoke(true)
+                Intent.ACTION_POWER_DISCONNECTED -> chargeAction?.invoke(false)
+                Intent.ACTION_BATTERY_CHANGED -> {
+                    val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+                    val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+
+                    //电量没有发生变化则不回调
+                    if (lastLevel == level && lastScale == scale) {
+                        return@run
                     }
+
+                    lastLevel = level
+                    lastScale = scale
+
+                    val curAmount = (level.toFloat() / scale * 100).toInt()
+                    amountAction?.invoke(curAmount)
                 }
+                else -> otherAction?.invoke(this)
             }
         }
     }
 
-    override fun triggerAtOnce() {
-
-    }
-
-    /**
-     * 电池事件回调
-     */
-    interface Callback {
-        /**
-         * 充电/断电
-         *
-         * @param isCharging true:充电
-         */
-        fun onChargeChanged(isCharging: Boolean)
-
-        /**
-         * 电池电量变化
-         *
-         * @param curAmount 当前剩余电量
-         */
-        fun onAmountChanged(curAmount: Int)
+    override fun triggerAtOnce(context: Context) {
+        chargeAction?.run {
+            val intent = context.applicationContext.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val status = intent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+            val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+            this.invoke(isCharging)
+        }
     }
 }
