@@ -1,8 +1,9 @@
-package com.bcstreceiver
+package com.bcstreceiver.battery
 
 import android.content.Context
 import android.content.Intent
 import android.os.BatteryManager
+import com.bcstreceiver.CallbackProvider
 
 /**
  * 添加人：  Tom Hawk

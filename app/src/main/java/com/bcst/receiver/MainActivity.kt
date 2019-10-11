@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.bcstreceiver.BatteryCallbackProvider
 import com.bcstreceiver.BcstReceiver
-import com.bcstreceiver.TimeCallbackProvider
+import com.bcstreceiver.battery.BatteryCallbackProvider
+import com.bcstreceiver.time.TimeCallbackProvider
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {

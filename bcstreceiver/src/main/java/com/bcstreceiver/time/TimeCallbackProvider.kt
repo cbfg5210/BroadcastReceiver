@@ -1,7 +1,8 @@
-package com.bcstreceiver
+package com.bcstreceiver.time
 
 import android.content.Context
 import android.content.Intent
+import com.bcstreceiver.CallbackProvider
 import java.text.SimpleDateFormat
 import java.util.*
 
