@@ -16,7 +16,7 @@ interface CallbackProvider {
     /**
      * 创建 BcstReceiver 广播接收器回调
      */
-    fun create(): (context: Context, intent: Intent?) -> Unit
+    fun create(): (context: Context, intent: Intent) -> Unit
 
     /**
      * 注册广播接收器时调用

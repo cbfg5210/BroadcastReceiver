@@ -22,9 +22,9 @@ class BatteryCallbackProvider : CallbackProvider {
         return this
     }
 
-    override fun create(): (context: Context, intent: Intent?) -> Unit {
-        return { _, intent: Intent? ->
-            intent?.action?.run {
+    override fun create(): (context: Context, intent: Intent) -> Unit {
+        return { _, intent: Intent ->
+            intent.action?.run {
                 when (this) {
                     Intent.ACTION_POWER_CONNECTED -> action.onChargeChanged(true)
                     Intent.ACTION_POWER_DISCONNECTED -> action.onChargeChanged(false)

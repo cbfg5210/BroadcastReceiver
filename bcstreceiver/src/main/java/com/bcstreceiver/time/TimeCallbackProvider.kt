@@ -28,8 +28,8 @@ class TimeCallbackProvider(format: String? = null, locale: Locale? = null) : Cal
         return this
     }
 
-    override fun create(): (context: Context, intent: Intent?) -> Unit {
-        return { _, _: Intent? -> triggerAtOnce() }
+    override fun create(): (context: Context, intent: Intent) -> Unit {
+        return { _, _ -> triggerAtOnce() }
     }
 
     override fun triggerAtOnce() {
