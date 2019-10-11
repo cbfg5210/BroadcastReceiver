@@ -38,28 +38,30 @@ class BatteryCallbackProvider : CallbackProvider {
         return this
     }
 
-    override fun create(): (context: Context, intent: Intent) -> Unit = { _: Context, intent: Intent ->
-        intent.action?.run {
-            when (this) {
-                Intent.ACTION_POWER_CONNECTED -> chargeAction?.invoke(true)
-                Intent.ACTION_POWER_DISCONNECTED -> chargeAction?.invoke(false)
-                Intent.ACTION_BATTERY_CHANGED -> {
-                    val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                    val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+    override fun create(): (context: Context, intent: Intent) -> Unit {
+        return { _: Context, intent: Intent -> handle(intent) }
+    }
 
-                    //电量没有发生变化则不回调
-                    if (lastLevel == level && lastScale == scale) {
-                        return@run
-                    }
+    private fun handle(intent: Intent) {
+        when (val action = intent.action ?: return) {
+            Intent.ACTION_POWER_CONNECTED -> chargeAction?.invoke(true)
+            Intent.ACTION_POWER_DISCONNECTED -> chargeAction?.invoke(false)
+            Intent.ACTION_BATTERY_CHANGED -> {
+                val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+                val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
 
-                    lastLevel = level
-                    lastScale = scale
-
-                    val curAmount = (level.toFloat() / scale * 100).toInt()
-                    amountAction?.invoke(curAmount)
+                //电量没有发生变化则不回调
+                if (lastLevel == level && lastScale == scale) {
+                    return
                 }
-                else -> otherAction?.invoke(this)
+
+                lastLevel = level
+                lastScale = scale
+
+                val curAmount = (level.toFloat() / scale * 100).toInt()
+                amountAction?.invoke(curAmount)
             }
+            else -> otherAction?.invoke(action)
         }
     }
 

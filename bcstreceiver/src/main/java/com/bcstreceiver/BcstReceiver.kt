@@ -90,10 +90,10 @@ class BcstReceiver : BroadcastReceiver() {
 
     private fun register(context: Context, shouldRegister: Boolean) {
         if (shouldRegister && !hasRegisterReceiver) {
+            callbackProvider?.triggerAtOnce(context)
+
             context.registerReceiver(this, intentFilter)
             hasRegisterReceiver = true
-
-            callbackProvider?.triggerAtOnce(context)
         }
     }
 

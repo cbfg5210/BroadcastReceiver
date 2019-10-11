@@ -29,14 +29,14 @@ class TimeCallbackProvider(format: String? = null, locale: Locale? = null) : Cal
     }
 
     override fun create(): (context: Context, intent: Intent) -> Unit {
-        return { _, _ ->
-            val timeMills = System.currentTimeMillis()
-            val formattedTime = dateFormat?.format(timeMills)
-            action.invoke(timeMills, formattedTime)
-        }
+        return { _, _ -> handle() }
     }
 
     override fun triggerAtOnce(context: Context) {
+        handle()
+    }
+
+    private fun handle() {
         val timeMills = System.currentTimeMillis()
         val formattedTime = dateFormat?.format(timeMills)
         action.invoke(timeMills, formattedTime)

@@ -23,9 +23,7 @@ class HomeCallbackProvider(private val action: (reason: String) -> Unit) : Callb
     }
 
     override fun create(): (context: Context, intent: Intent) -> Unit {
-        return { _, intent ->
-            action.invoke(intent.getStringExtra(KEY_REASON))
-        }
+        return { _, intent -> action.invoke(intent.getStringExtra(KEY_REASON)) }
     }
 
     override fun triggerAtOnce(context: Context) {

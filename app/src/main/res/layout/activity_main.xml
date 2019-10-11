@@ -43,14 +43,6 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnWifi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Wifi" />
-
-    <Button
         android:id="@+id/btnHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
