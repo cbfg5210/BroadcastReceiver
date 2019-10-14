@@ -37,7 +37,7 @@ class BcstReceiver : BroadcastReceiver() {
         return this
     }
 
-    fun setCallbackProvider(bcstWatcher: BcstWatcher): BcstReceiver {
+    fun setBcstWatcher(bcstWatcher: BcstWatcher): BcstReceiver {
         this.bcstWatcher = bcstWatcher
         this.callback = bcstWatcher.create()
         return this

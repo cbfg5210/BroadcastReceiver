@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         when (v.id) {
             R.id.btnTime -> {
-                val callbackProvider = TimeWatcher("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
+                val bcstWatcher = TimeWatcher("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
                     Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
                 }
 
@@ -43,12 +43,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_TIME_TICK)
                         }
                         //.setCallback { context, intent -> Log.e("***", "${System.currentTimeMillis()}") }
-                        .setCallbackProvider(callbackProvider)
+                        .setBcstWatcher(bcstWatcher)
                         .bind(this, lifecycle)
             }
 
             R.id.btnBattery -> {
-                val callbackProvider = BatteryWatcher()
+                val bcstWatcher = BatteryWatcher()
                         .onChargeEvent { isCharging -> Log.e("***", "isCharging = $isCharging") }
                         .onAmountEvent { amount -> Log.e("***", "battery amount = $amount") }
                         .onOtherEvent { action -> Log.e("***", "action = $action") }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_BATTERY_OKAY)
                         }
                         //.setCallback { context, intent -> Log.e("***", "action = ${intent.action}") }
-                        .setCallbackProvider(callbackProvider)
+                        .setBcstWatcher(bcstWatcher)
                         .bind(this, lifecycle)
             }
 
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
                         }
                         //.setCallback { context, intent -> Log.e("***", "action = ${intent.action}") }
-                        .setCallbackProvider(HomeWatcher { reason ->
+                        .setBcstWatcher(HomeWatcher { reason ->
                             when (reason) {
                                 HomeWatcher.FLAG_HOME -> Log.e("***", "Home")
                                 HomeWatcher.FLAG_LOCK -> Log.e("***", "Lock")
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnNet -> {
-                val callbackProvider = NetworkWatcher()
+                val bcstWatcher = NetworkWatcher()
                         .onNetConnEvent { isConnected, isAvailable, netType ->
                             Log.e("***", "isConnected = $isConnected,isAvailable = $isAvailable,netType = $netType")
                         }
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION)
                         }
                         //.setCallback { _, intent -> Log.e("***", "intent = $intent") }
-                        .setCallbackProvider(callbackProvider)
+                        .setBcstWatcher(bcstWatcher)
                         .bind(this, lifecycle)
             }
 
