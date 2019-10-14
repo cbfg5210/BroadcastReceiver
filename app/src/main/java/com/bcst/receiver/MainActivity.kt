@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         when (v.id) {
             R.id.btnTime -> {
-                val callbackProvider = TimeCallbackProvider("yyyy-MM-dd HH:mm:ss").act { timeMills, formattedTime ->
+                val callbackProvider = TimeCallbackProvider("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
                     Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
                 }
 

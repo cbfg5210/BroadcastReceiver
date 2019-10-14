@@ -23,7 +23,7 @@ class TimeCallbackProvider(format: String? = null, locale: Locale? = null) : Cal
         format?.run { dateFormat = SimpleDateFormat(this, locale ?: Locale.CHINA) }
     }
 
-    fun act(cb: (timeMills: Long, formattedTime: String?) -> Unit): TimeCallbackProvider {
+    fun onTimeEvent(cb: (timeMills: Long, formattedTime: String?) -> Unit): TimeCallbackProvider {
         this.action = cb
         return this
     }
