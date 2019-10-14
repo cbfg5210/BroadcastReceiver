@@ -35,7 +35,7 @@ dependencies {
             // 设置回调
             .setCallback { context, intent -> Log.e("***", "${System.currentTimeMillis()}") }
             // 自定义回调处理
-            .setBcstWatcher(BcstWatcher)
+            //.setBcstWatcher(BcstWatcher)
             //.bind(this, lifecycle) // 默认在 onCreate 注册广播接收器,在 onDestroy 注销
             //.bind(this,lifecycle,Lifecycle.Event.ON_START) // 在 onStart 注册广播接收器,在 onStop 注销
             .bind(this, lifecycle, Lifecycle.Event.ON_RESUME) // 在 onResume 注册广播接收器,在 onPause 注销
