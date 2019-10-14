@@ -20,7 +20,7 @@ import androidx.lifecycle.OnLifecycleEvent
 class BcstReceiver : BroadcastReceiver() {
     private val intentFilter: IntentFilter by lazy { IntentFilter() }
     private lateinit var callback: ((context: Context, intent: Intent) -> Unit)
-    private var callbackProvider: CallbackProvider? = null
+    private var bcstWatcher: BcstWatcher? = null
     private var hasRegisterReceiver = false
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -37,9 +37,9 @@ class BcstReceiver : BroadcastReceiver() {
         return this
     }
 
-    fun setCallbackProvider(callbackProvider: CallbackProvider): BcstReceiver {
-        this.callbackProvider = callbackProvider
-        this.callback = callbackProvider.create()
+    fun setCallbackProvider(bcstWatcher: BcstWatcher): BcstReceiver {
+        this.bcstWatcher = bcstWatcher
+        this.callback = bcstWatcher.create()
         return this
     }
 
@@ -90,7 +90,7 @@ class BcstReceiver : BroadcastReceiver() {
 
     private fun register(context: Context, shouldRegister: Boolean) {
         if (shouldRegister && !hasRegisterReceiver) {
-            callbackProvider?.triggerAtOnce(context)
+            bcstWatcher?.triggerAtOnce(context)
 
             context.registerReceiver(this, intentFilter)
             hasRegisterReceiver = true

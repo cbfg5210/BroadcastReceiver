@@ -2,7 +2,7 @@ package com.bcstreceiver.time
 
 import android.content.Context
 import android.content.Intent
-import com.bcstreceiver.CallbackProvider
+import com.bcstreceiver.BcstWatcher
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,7 +15,7 @@ import java.util.*
  * 修改时间：2019/10/10 16:15
  * 修改内容：
  */
-class TimeCallbackProvider(format: String? = null, locale: Locale? = null) : CallbackProvider {
+class TimeWatcher(format: String? = null, locale: Locale? = null) : BcstWatcher {
     private var dateFormat: SimpleDateFormat? = null
     private lateinit var action: (timeMills: Long, formattedTime: String?) -> Unit
 
@@ -23,7 +23,7 @@ class TimeCallbackProvider(format: String? = null, locale: Locale? = null) : Cal
         format?.run { dateFormat = SimpleDateFormat(this, locale ?: Locale.CHINA) }
     }
 
-    fun onTimeEvent(cb: (timeMills: Long, formattedTime: String?) -> Unit): TimeCallbackProvider {
+    fun onTimeEvent(cb: (timeMills: Long, formattedTime: String?) -> Unit): TimeWatcher {
         this.action = cb
         return this
     }

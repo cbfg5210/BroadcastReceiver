@@ -2,7 +2,7 @@ package com.bcstreceiver.home
 
 import android.content.Context
 import android.content.Intent
-import com.bcstreceiver.CallbackProvider
+import com.bcstreceiver.BcstWatcher
 
 /**
  * 添加人：  Tom Hawk
@@ -13,7 +13,7 @@ import com.bcstreceiver.CallbackProvider
  * 修改时间：2019/10/11 10:47
  * 修改内容：
  */
-class HomeCallbackProvider(private val action: (reason: String) -> Unit) : CallbackProvider {
+class HomeWatcher(private val action: (reason: String) -> Unit) : BcstWatcher {
     companion object {
         private const val KEY_REASON = "reason"
         const val FLAG_HOME = "homekey"

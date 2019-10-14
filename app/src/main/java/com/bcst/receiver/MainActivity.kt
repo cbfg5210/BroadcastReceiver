@@ -8,10 +8,10 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bcstreceiver.BcstReceiver
-import com.bcstreceiver.battery.BatteryCallbackProvider
-import com.bcstreceiver.home.HomeCallbackProvider
-import com.bcstreceiver.network.NetworkCallbackProvider
-import com.bcstreceiver.time.TimeCallbackProvider
+import com.bcstreceiver.battery.BatteryWatcher
+import com.bcstreceiver.home.HomeWatcher
+import com.bcstreceiver.network.NetworkWatcher
+import com.bcstreceiver.time.TimeWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         when (v.id) {
             R.id.btnTime -> {
-                val callbackProvider = TimeCallbackProvider("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
+                val callbackProvider = TimeWatcher("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
                     Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
                 }
 
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnBattery -> {
-                val callbackProvider = BatteryCallbackProvider()
+                val callbackProvider = BatteryWatcher()
                         .onChargeEvent { isCharging -> Log.e("***", "isCharging = $isCharging") }
                         .onAmountEvent { amount -> Log.e("***", "battery amount = $amount") }
                         .onOtherEvent { action -> Log.e("***", "action = $action") }
@@ -73,12 +73,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
                         }
                         //.setCallback { context, intent -> Log.e("***", "action = ${intent.action}") }
-                        .setCallbackProvider(HomeCallbackProvider { reason ->
+                        .setCallbackProvider(HomeWatcher { reason ->
                             when (reason) {
-                                HomeCallbackProvider.FLAG_HOME -> Log.e("***", "Home")
-                                HomeCallbackProvider.FLAG_LOCK -> Log.e("***", "Lock")
-                                HomeCallbackProvider.FLAG_RECENT_APPS -> Log.e("***", "Recent apps")
-                                HomeCallbackProvider.FLAG_ASSIST -> Log.e("***", "Assist")
+                                HomeWatcher.FLAG_HOME -> Log.e("***", "Home")
+                                HomeWatcher.FLAG_LOCK -> Log.e("***", "Lock")
+                                HomeWatcher.FLAG_RECENT_APPS -> Log.e("***", "Recent apps")
+                                HomeWatcher.FLAG_ASSIST -> Log.e("***", "Assist")
                                 else -> Log.e("***", "Other")
                             }
                         })
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnNet -> {
-                val callbackProvider = NetworkCallbackProvider()
+                val callbackProvider = NetworkWatcher()
                         .onNetConnEvent { isConnected, isAvailable, netType ->
                             Log.e("***", "isConnected = $isConnected,isAvailable = $isAvailable,netType = $netType")
                         }

@@ -12,7 +12,7 @@ import android.content.Intent
  * 修改时间：2019/10/11 9:08
  * 修改内容：
  */
-interface CallbackProvider {
+interface BcstWatcher {
     /**
      * 创建 BcstReceiver 广播接收器回调
      */

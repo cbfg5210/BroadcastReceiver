@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
-import com.bcstreceiver.CallbackProvider
+import com.bcstreceiver.BcstWatcher
 
 /**
  * 添加人：  Tom Hawk
@@ -18,7 +18,7 @@ import com.bcstreceiver.CallbackProvider
  * 修改时间：2019/10/11 10:47
  * 修改内容：
  */
-class NetworkCallbackProvider : CallbackProvider {
+class NetworkWatcher : BcstWatcher {
     private lateinit var context: Context
 
     private val connManager: ConnectivityManager by lazy {
@@ -32,22 +32,22 @@ class NetworkCallbackProvider : CallbackProvider {
 
     private var maxSignalLevel = 3
 
-    fun onNetConnEvent(cb: (isConnected: Boolean, isAvailable: Boolean, netType: Int) -> Unit): NetworkCallbackProvider {
+    fun onNetConnEvent(cb: (isConnected: Boolean, isAvailable: Boolean, netType: Int) -> Unit): NetworkWatcher {
         this.netConnAction = cb
         return this
     }
 
-    fun onWifiConnStateEvent(cb: (connState: NetworkInfo.State?) -> Unit): NetworkCallbackProvider {
+    fun onWifiConnStateEvent(cb: (connState: NetworkInfo.State?) -> Unit): NetworkWatcher {
         this.wifiConnStateAction = cb
         return this
     }
 
-    fun onWifiStateEvent(cb: (isWifiEnabled: Boolean) -> Unit): NetworkCallbackProvider {
+    fun onWifiStateEvent(cb: (isWifiEnabled: Boolean) -> Unit): NetworkWatcher {
         this.wifiStateAction = cb
         return this
     }
 
-    fun onWifiRssiEvent(maxSignalLevel: Int, cb: (signalLevel: Int) -> Unit): NetworkCallbackProvider {
+    fun onWifiRssiEvent(maxSignalLevel: Int, cb: (signalLevel: Int) -> Unit): NetworkWatcher {
         this.maxSignalLevel = maxSignalLevel
         this.wifiRssiAction = cb
         return this

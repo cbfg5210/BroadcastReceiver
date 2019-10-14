@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
-import com.bcstreceiver.CallbackProvider
+import com.bcstreceiver.BcstWatcher
 
 /**
  * 添加人：  Tom Hawk
@@ -15,7 +15,7 @@ import com.bcstreceiver.CallbackProvider
  * 修改时间：2019/10/10 17:10
  * 修改内容：
  */
-class BatteryCallbackProvider : CallbackProvider {
+class BatteryWatcher : BcstWatcher {
     private var chargeAction: ((isCharging: Boolean) -> Unit)? = null
     private var amountAction: ((amount: Int) -> Unit)? = null
     private var otherAction: ((action: String) -> Unit)? = null
@@ -23,17 +23,17 @@ class BatteryCallbackProvider : CallbackProvider {
     private var lastLevel = -2
     private var lastScale = -2
 
-    fun onChargeEvent(event: (isCharging: Boolean) -> Unit): BatteryCallbackProvider {
+    fun onChargeEvent(event: (isCharging: Boolean) -> Unit): BatteryWatcher {
         this.chargeAction = event
         return this
     }
 
-    fun onAmountEvent(event: (amount: Int) -> Unit): BatteryCallbackProvider {
+    fun onAmountEvent(event: (amount: Int) -> Unit): BatteryWatcher {
         this.amountAction = event
         return this
     }
 
-    fun onOtherEvent(event: (action: String) -> Unit): BatteryCallbackProvider {
+    fun onOtherEvent(event: (action: String) -> Unit): BatteryWatcher {
         this.otherAction = event
         return this
     }
