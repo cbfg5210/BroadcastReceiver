@@ -1,4 +1,4 @@
-package com.bcstreceiver.battery
+package com.bcstreceiver.watcher
 
 import android.content.Context
 import android.content.Intent

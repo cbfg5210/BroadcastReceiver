@@ -8,10 +8,10 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bcstreceiver.BcstReceiver
-import com.bcstreceiver.battery.BatteryWatcher
-import com.bcstreceiver.home.HomeWatcher
-import com.bcstreceiver.network.NetworkWatcher
-import com.bcstreceiver.time.TimeWatcher
+import com.bcstreceiver.watcher.BatteryWatcher
+import com.bcstreceiver.watcher.HomeWatcher
+import com.bcstreceiver.watcher.NetworkWatcher
+import com.bcstreceiver.watcher.TimeWatcher
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
