@@ -65,4 +65,12 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:text="Net" />
+
+    <Button
+        android:id="@+id/btnPkg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Package" />
 </LinearLayout>

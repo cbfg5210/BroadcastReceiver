@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnHome.setOnClickListener(this)
         btnScreen.setOnClickListener(this)
         btnNet.setOnClickListener(this)
+        btnPkg.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -124,6 +125,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         }
                         //.setCallback { _, intent -> Log.e("***", "intent = $intent") }
                         .setCallbackProvider(callbackProvider)
+                        .bind(this, lifecycle)
+            }
+
+            R.id.btnPkg -> {
+                BcstReceiver()
+                        .withFilter { intentFilter ->
+                            intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
+                            intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+                            intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED)
+                            intentFilter.addDataScheme("package")
+                        }
+                        .setCallback { _, intent ->
+                            Log.e("***", "intent = $intent,dataString = ${intent.dataString}")
+                        }
                         .bind(this, lifecycle)
             }
         }
