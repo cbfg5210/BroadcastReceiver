@@ -12,3 +12,4 @@
 .externalNativeBuild
 .cxx
 /.idea
+uploadArchives.gradle
