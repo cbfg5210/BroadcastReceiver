@@ -112,6 +112,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         .onWifiRssiEvent(5) { signalLevel ->
                             Log.e("***", "signalLevel = $signalLevel")
                         }
+                        .onWifiConnResultEvent { result ->
+                            Log.e("***", "conn result = $result")
+                        }
+                        .onWifiScanResultEvent { list ->
+                            Log.e("***", "scan result = $list")
+                        }
 
                 BcstReceiver()
                         .withFilter { intentFilter ->
@@ -122,6 +128,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             //wifi 打开或关闭的状态
                             intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                             intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION)
+                            intentFilter.addAction(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION)
+                            intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
                         }
                         //.setCallback { _, intent -> Log.e("***", "intent = $intent") }
                         .setBcstWatcher(bcstWatcher)

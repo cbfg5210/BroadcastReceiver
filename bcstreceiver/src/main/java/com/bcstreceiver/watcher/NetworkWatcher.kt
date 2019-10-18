@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import com.bcstreceiver.BcstWatcher
 
@@ -25,10 +26,16 @@ class NetworkWatcher : BcstWatcher {
         context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
+    private val wifiManager: WifiManager by lazy {
+        context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+    }
+
     private var netConnAction: ((isConnected: Boolean, isAvailable: Boolean, netType: Int) -> Unit)? = null
     private var wifiConnStateAction: ((connState: NetworkInfo.State?) -> Unit)? = null
+    private var wifiConnResultAction: ((result: Int) -> Unit)? = null
     private var wifiStateAction: ((isWifiEnabled: Boolean) -> Unit)? = null
     private var wifiRssiAction: ((signalLevel: Int) -> Unit)? = null
+    private var wifiScanResultAction: ((List<ScanResult>) -> Unit)? = null
 
     private var maxSignalLevel = 3
 
@@ -50,6 +57,16 @@ class NetworkWatcher : BcstWatcher {
     fun onWifiRssiEvent(maxSignalLevel: Int, cb: (signalLevel: Int) -> Unit): NetworkWatcher {
         this.maxSignalLevel = maxSignalLevel
         this.wifiRssiAction = cb
+        return this
+    }
+
+    fun onWifiConnResultEvent(cb: ((result: Int) -> Unit)): NetworkWatcher {
+        this.wifiConnResultAction = cb
+        return this
+    }
+
+    fun onWifiScanResultEvent(cb: ((List<ScanResult>) -> Unit)): NetworkWatcher {
+        this.wifiScanResultAction = cb
         return this
     }
 
@@ -88,10 +105,26 @@ class NetworkWatcher : BcstWatcher {
                     this.invoke(WifiManager.calculateSignalLevel(rssi, maxSignalLevel))
                 }
             }
+
+            WifiManager.SUPPLICANT_STATE_CHANGED_ACTION -> {
+                wifiConnResultAction?.run {
+                    this.invoke(intent.getIntExtra(WifiManager.EXTRA_SUPPLICANT_ERROR, 0))
+                }
+            }
+
+            WifiManager.SCAN_RESULTS_AVAILABLE_ACTION -> {
+                wifiScanResultAction?.run {
+                    this.invoke(wifiManager.scanResults)
+                }
+            }
         }
     }
 
     override fun triggerAtOnce(context: Context) {
         this.context = context
+
+        wifiScanResultAction?.run {
+            this.invoke(wifiManager.scanResults)
+        }
     }
 }
