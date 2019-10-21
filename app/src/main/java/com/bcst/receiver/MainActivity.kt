@@ -33,17 +33,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         when (v.id) {
             R.id.btnTime -> {
-                val bcstWatcher = TimeWatcher("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
-                    Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
-                }
-
                 BcstReceiver()
                         .withFilter { intentFilter ->
                             intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
                             intentFilter.addAction(Intent.ACTION_TIME_TICK)
                         }
                         //.setCallback { context, intent -> Log.e("***", "${System.currentTimeMillis()}") }
-                        .setBcstWatcher(bcstWatcher)
+                        .setBcstWatcher(TimeWatcher("yyyy-MM-dd HH:mm:ss") { timeMills, formattedTime ->
+                            Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
+                        })
                         .bind(this, lifecycle)
             }
 

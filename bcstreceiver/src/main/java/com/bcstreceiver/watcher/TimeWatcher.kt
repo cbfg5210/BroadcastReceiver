@@ -15,17 +15,11 @@ import java.util.*
  * 修改时间：2019/10/10 16:15
  * 修改内容：
  */
-class TimeWatcher(format: String? = null, locale: Locale? = null) : BcstWatcher {
+class TimeWatcher(format: String? = null, locale: Locale? = null, private val action: (timeMills: Long, formattedTime: String?) -> Unit) : BcstWatcher {
     private var dateFormat: SimpleDateFormat? = null
-    private lateinit var action: (timeMills: Long, formattedTime: String?) -> Unit
 
     init {
-        format?.run { dateFormat = SimpleDateFormat(this, locale ?: Locale.CHINA) }
-    }
-
-    fun onTimeEvent(cb: (timeMills: Long, formattedTime: String?) -> Unit): TimeWatcher {
-        this.action = cb
-        return this
+        format?.run { dateFormat = SimpleDateFormat(this, locale ?: Locale.getDefault()) }
     }
 
     override fun create(): (context: Context, intent: Intent) -> Unit {
