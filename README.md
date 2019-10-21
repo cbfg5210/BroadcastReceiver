@@ -65,17 +65,11 @@ interface BcstWatcher {
 [TimeWatcher.kt](https://github.com/cbfg5210/BroadcastReceiver/blob/master/bcstreceiver/src/main/java/com/bcstreceiver/watcher/TimeWatcher.kt) :
 
 ```java
-class TimeWatcher(format: String? = null, locale: Locale? = null) : BcstWatcher {
+class TimeWatcher(format: String? = null, locale: Locale? = null, private val action: (timeMills: Long, formattedTime: String?) -> Unit) : BcstWatcher {
     private var dateFormat: SimpleDateFormat? = null
-    private lateinit var action: (timeMills: Long, formattedTime: String?) -> Unit
 
     init {
-        format?.run { dateFormat = SimpleDateFormat(this, locale ?: Locale.CHINA) }
-    }
-
-    fun onTimeEvent(cb: (timeMills: Long, formattedTime: String?) -> Unit): TimeWatcher {
-        this.action = cb
-        return this
+        format?.run { dateFormat = SimpleDateFormat(this, locale ?: Locale.getDefault()) }
     }
 
     override fun create(): (context: Context, intent: Intent) -> Unit {
@@ -97,16 +91,14 @@ class TimeWatcher(format: String? = null, locale: Locale? = null) : BcstWatcher 
 #### 使用 TimeWatcher:
 
 ```java
-   val bcstWatcher = TimeWatcher("yyyy-MM-dd HH:mm:ss").onTimeEvent { timeMills, formattedTime ->
-            Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
-        }
-
    BcstReceiver()
           .withFilter { intentFilter ->
               intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
               intentFilter.addAction(Intent.ACTION_TIME_TICK)
           }
-          .setBcstWatcher(bcstWatcher)
+           .setBcstWatcher(TimeWatcher("yyyy-MM-dd HH:mm:ss") { timeMills, formattedTime ->
+	       Log.e("***", "timeMills=$timeMills,formattedTime=$formattedTime")
+	   })
           .bind(this, lifecycle)
 ```
 
