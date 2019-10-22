@@ -23,14 +23,10 @@ class TimeWatcher(format: String? = null, locale: Locale? = null, private val ac
     }
 
     override fun create(): (context: Context, intent: Intent) -> Unit {
-        return { _, _ -> handle() }
+        return { context, _ -> triggerAtOnce(context) }
     }
 
     override fun triggerAtOnce(context: Context) {
-        handle()
-    }
-
-    private fun handle() {
         val timeMills = System.currentTimeMillis()
         val formattedTime = dateFormat?.format(timeMills)
         action.invoke(timeMills, formattedTime)
