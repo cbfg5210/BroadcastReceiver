@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val bcstWatcher = BatteryWatcher()
                         .onChargeEvent { isCharging -> Log.e("***", "isCharging = $isCharging") }
                         .onAmountEvent { amount -> Log.e("***", "battery amount = $amount") }
+                        .onStateEvent { state ->
+                            Log.e("***", "level=${state.level},scale=${state.scale},amount=${state.amount},voltage=${state.voltage},status=${state.status},plugged=${state.plugged}")
+                        }
                         .onOtherEvent { action -> Log.e("***", "action = $action") }
 
                 BcstReceiver()

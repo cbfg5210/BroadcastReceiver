@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import com.bcstreceiver.BcstWatcher
+import com.bcstreceiver.bean.BatteryInfo
 
 /**
  * 添加人：  Tom Hawk
@@ -18,10 +19,10 @@ import com.bcstreceiver.BcstWatcher
 class BatteryWatcher : BcstWatcher {
     private var chargeAction: ((isCharging: Boolean) -> Unit)? = null
     private var amountAction: ((amount: Int) -> Unit)? = null
+    private var stateAction: ((state: BatteryInfo) -> Unit)? = null
     private var otherAction: ((action: String) -> Unit)? = null
 
-    private var lastLevel = -2
-    private var lastScale = -2
+    private val batteryInfo: BatteryInfo by lazy { BatteryInfo() }
 
     fun onChargeEvent(event: (isCharging: Boolean) -> Unit): BatteryWatcher {
         this.chargeAction = event
@@ -30,6 +31,11 @@ class BatteryWatcher : BcstWatcher {
 
     fun onAmountEvent(event: (amount: Int) -> Unit): BatteryWatcher {
         this.amountAction = event
+        return this
+    }
+
+    fun onStateEvent(event: (state: BatteryInfo) -> Unit): BatteryWatcher {
+        this.stateAction = event
         return this
     }
 
@@ -47,19 +53,15 @@ class BatteryWatcher : BcstWatcher {
             Intent.ACTION_POWER_CONNECTED -> chargeAction?.invoke(true)
             Intent.ACTION_POWER_DISCONNECTED -> chargeAction?.invoke(false)
             Intent.ACTION_BATTERY_CHANGED -> {
-                val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+                batteryInfo.level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+                batteryInfo.scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+                batteryInfo.amount = (batteryInfo.level.toFloat() / batteryInfo.scale * 100).toInt()
+                batteryInfo.voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0)
+                batteryInfo.status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN)
+                batteryInfo.plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
 
-                //电量没有发生变化则不回调
-                if (lastLevel == level && lastScale == scale) {
-                    return
-                }
-
-                lastLevel = level
-                lastScale = scale
-
-                val curAmount = (level.toFloat() / scale * 100).toInt()
-                amountAction?.invoke(curAmount)
+                amountAction?.invoke(batteryInfo.amount)
+                stateAction?.invoke(batteryInfo)
             }
             else -> otherAction?.invoke(action)
         }
