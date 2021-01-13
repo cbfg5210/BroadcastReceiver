@@ -1,7 +1,7 @@
 # BroadcastReceiver
 [![](https://jitpack.io/v/cbfg5210/BroadcastReceiver.svg)](https://jitpack.io/#cbfg5210/BroadcastReceiver)
 
-### Note：本库已迁移至 Gitee 并且后续的更新会在这里喔：[BCReceiver](https://gitee.com/cbfg5210/BCReceiver)
+# :warning: 本库已迁移至 Gitee 并且后续的更新会在这里喔：[BCReceiver](https://gitee.com/cbfg5210/BCReceiver)
 
 为了简化广播接收处理，最近封装了一下广播接收器，下面和大家分享一下封装后的使用方法，还望各位看官多多指点!
 
